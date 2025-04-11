@@ -15,10 +15,7 @@ const Footer = () => {
   </span>
   <Image className="w-16 md:w-20" src={assets.logo} alt="logo" />
 </div>          <p className="mt-6 text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+GizmoHive is your one-stop destination for the latest and greatest in tech. From cutting-edge gadgets to everyday electronics, we bring you carefully curated products that blend innovation, utility, and style. Our mission is to make smart living accessible to everyone.
           </p>
         </div>
 
