@@ -1,5 +1,4 @@
 'use client'
-import { productsDummyData, userDummyData } from "@/assets/assets";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import axios from 'axios';
@@ -20,12 +19,22 @@ export const AppContextProvider = (props) => {
     const{getToken}=useAuth()
 
     const [products, setProducts] = useState([])
-    const [userData, setUserData] = useState(false)
-    const [isSeller, setIsSeller] = useState(true)
+    const [userData, setUserData] = useState({})
+    const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
     const fetchProductData = async () => {
-        setProducts(productsDummyData)
+        try {
+            const { data } = await axios.get('/api/product/list')
+            if (data.success) {
+                setProducts(data.products)
+            }
+            else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     const fetchUserData = async () => {
@@ -59,7 +68,20 @@ else{
             cartData[itemId] = 1;
         }
         setCartItems(cartData);
-
+        if (user) {
+            try {
+                const token = await getToken()
+                await axios.post('/api/cart/update', { cartData }, { headers: { Authorization: `Bearer ${token}` } })
+                toast.success("Item added to cart")
+               
+            }
+           
+                
+             catch (error) {
+                toast.error(error.message)
+            }
+           
+        }
     }
 
     const updateCartQuantity = async (itemId, quantity) => {
@@ -71,6 +93,22 @@ else{
             cartData[itemId] = quantity;
         }
         setCartItems(cartData)
+        if (user) {
+            try {
+                const token = await getToken()
+                await axios.post('/api/cart/update', { cartData }, { headers: { Authorization: `Bearer ${token}` } })
+                toast.success("Cart Updated")
+               
+            }
+           
+                
+             catch (error) {
+                toast.error(error.message)
+            }
+        }
+       
+
+    
 
     }
 
