@@ -59,30 +59,35 @@ else{
     }
 
     const addToCart = async (itemId) => {
-
         let cartData = structuredClone(cartItems);
+        
+        // Update local cart data
         if (cartData[itemId]) {
             cartData[itemId] += 1;
-        }
-        else {
+        } else {
             cartData[itemId] = 1;
         }
+    
         setCartItems(cartData);
-        if (user) {
-            try {
-                const token = await getToken()
-                await axios.post('/api/cart/update', { cartData }, { headers: { Authorization: `Bearer ${token}` } })
-                toast.success("Item added to cart")
-               
-            }
-           
-                
-             catch (error) {
-                toast.error(error.message)
-            }
-           
+    
+        // Check if user is logged in
+        if (!user) {
+            toast.error("Please login to add items to cart");
+            return;
+        }
+    
+        // Update cart on server
+        try {
+            const token = await getToken();
+            await axios.post('/api/cart/update', { cartData }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success("Item added to cart");
+        } catch (error) {
+            toast.error(error.message);
         }
     }
+    
 
     const updateCartQuantity = async (itemId, quantity) => {
 

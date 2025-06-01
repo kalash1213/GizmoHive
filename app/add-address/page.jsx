@@ -4,8 +4,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import { useState } from "react";
+import { useAppContext } from "@/context/AppContext";
+import toast from "react-hot-toast";
+import axios from 'axios';
 
 const AddAddress = () => {
+    const { getToken, router } = useAppContext();
 
     const [address, setAddress] = useState({
         fullName: '',
@@ -14,12 +18,29 @@ const AddAddress = () => {
         area: '',
         city: '',
         state: '',
-    })
+        country: '', 
+    });
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
+        try {
+            const token = await getToken();
+            const { data } = await axios.post('/api/user/add-address', { address }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
 
-    }
+            if (data.success) {
+                toast.success(data.message);
+                router.push('/cart');
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
 
     return (
         <>
@@ -31,29 +52,28 @@ const AddAddress = () => {
                     </p>
                     <div className="space-y-3 max-w-sm mt-10">
                         <input
-                            className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
+                            className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none"
                             type="text"
                             placeholder="Full name"
                             onChange={(e) => setAddress({ ...address, fullName: e.target.value })}
                             value={address.fullName}
                         />
                         <input
-                            className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
+                            className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none"
                             type="text"
                             placeholder="Phone number"
                             onChange={(e) => setAddress({ ...address, phoneNumber: e.target.value })}
                             value={address.phoneNumber}
                         />
                         <input
-                            className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
+                            className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none"
                             type="text"
                             placeholder="Pin code"
                             onChange={(e) => setAddress({ ...address, pincode: e.target.value })}
                             value={address.pincode}
                         />
                         <textarea
-                            className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500 resize-none"
-                            type="text"
+                            className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none resize-none"
                             rows={4}
                             placeholder="Address (Area and Street)"
                             onChange={(e) => setAddress({ ...address, area: e.target.value })}
@@ -61,20 +81,27 @@ const AddAddress = () => {
                         ></textarea>
                         <div className="flex space-x-3">
                             <input
-                                className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
+                                className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none"
                                 type="text"
                                 placeholder="City/District/Town"
                                 onChange={(e) => setAddress({ ...address, city: e.target.value })}
                                 value={address.city}
                             />
                             <input
-                                className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
+                                className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none"
                                 type="text"
                                 placeholder="State"
                                 onChange={(e) => setAddress({ ...address, state: e.target.value })}
                                 value={address.state}
                             />
                         </div>
+                        <input
+                            className="px-2 py-2.5 border border-gray-500/30 rounded w-full text-gray-500 focus:border-orange-500 outline-none"
+                            type="text"
+                            placeholder="Country"
+                            onChange={(e) => setAddress({ ...address, country: e.target.value })}
+                            value={address.country}
+                        />
                     </div>
                     <button type="submit" className="max-w-sm w-full mt-6 bg-orange-600 text-white py-3 hover:bg-orange-700 uppercase">
                         Save address
