@@ -6,7 +6,7 @@ const orderSchema=new mongoose.Schema({userId:{type:String,required:true,ref:'us
     
   }],
   amount:{type:Number,required:true},
-  address:{typ:String,ref:'address',required:true},
+  address:{type:String,ref:'address',required:true},
   status:{type:String,required:true,default:"Order Placed"},
   date:{type:Number,required:true},
 })
