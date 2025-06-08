@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema({
     {
       product: {
         type: String,
-        ref: "product", 
+        ref: "Product", 
         required: true,
       },
       quantity: {
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
   },
   address: {
     type:String,
-    ref: "address", 
+    ref: "Address", 
     required: true,
   },
   status: {

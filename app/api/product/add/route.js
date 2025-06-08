@@ -1,8 +1,8 @@
+import connectDB from "@/config/db";
 import authSeller from "@/lib/authSeller"
 import { getAuth } from "@clerk/nextjs/server";
 import {v2 as cloudinary} from "cloudinary"
 import Product from "@/models/Product";
-import connectDB from "@/config/db";
 import { NextResponse } from "next/server";
 //configure cloudinary
 cloudinary.config({
